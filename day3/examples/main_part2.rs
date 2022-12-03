@@ -21,13 +21,10 @@ fn main() {
 
     let mut priorities_sum = 0;
     let mut group_count = 0;
-    // let mut item_candidates: HashSet<char> = HashSet::new();
 
     let mut a: HashSet<char> = HashSet::new();
     let mut b: HashSet<char> = HashSet::new();
     let mut c: HashSet<char> = HashSet::new();
-    // let mut item_candidate_sets: Vec<HashSet<char>> = Vec::from([a, b, c]);
-    // let mut difference = a.difference(&b);
 
     let mut idx = 0;
     for (bag_content) in lines {
@@ -36,7 +33,6 @@ fn main() {
             continue;
         }
 
-        //
         let current_elf_idx_in_group = idx % 3;
 
         for (item) in bag_content.chars() {
@@ -47,33 +43,27 @@ fn main() {
             } else if current_elf_idx_in_group == 2 {
                 c.insert(item);
             }
-            // item_candidate_sets[current_elf_idx_in_group].insert(item);
         }
 
-        // if group of three elves populated
         if current_elf_idx_in_group == 2 {
             group_count += 1;
             println!("-- group {} --", group_count);
-            let mut ac: HashSet<char> = a.iter().cloned().collect();
-            let mut bc: HashSet<char> = b.iter().cloned().collect();
-            let mut cc: HashSet<char> = c.iter().cloned().collect();
-            let mut diff = &ac & &bc;
-            diff = &diff & &cc;
-
-            // intersection(&b).collect();
-            // diff = diff.intersection(&c);
-
-            let mut badge_item: Option<char> = None;
-            assert!(diff.len() == 1);
-            for item in diff {
-                badge_item = Some(item);
-            }
+            let ac: HashSet<char> = a.iter().cloned().collect();
+            let bc: HashSet<char> = b.iter().cloned().collect();
+            let cc: HashSet<char> = c.iter().cloned().collect();
+            // intersect items sets
+            let mut items_in_common: HashSet<char>;
+            items_in_common = &ac & &bc;
+            items_in_common = &items_in_common & &cc;
+            assert!(items_in_common.len() == 1);
 
             // reset
-            // item_candidates = HashSet::new();
             a = HashSet::new();
             b = HashSet::new();
             c = HashSet::new();
+
+            let mut badge_item: Option<char> = None;
+            badge_item = Some(Vec::from_iter(items_in_common)[0]);
 
             if let Some(found_badge_item) = badge_item {
                 let item_priority = get_item_priority(found_badge_item);
