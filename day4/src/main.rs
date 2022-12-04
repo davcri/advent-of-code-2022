@@ -1,8 +1,11 @@
-use std::{cmp, fs};
+use std::cmp;
+
+fn read_input(file_path: &str) -> Result<String, std::io::Error> {
+    return fs_err::read_to_string(file_path);
+}
 
 fn main() {
-    let file_path = "./src/input.txt";
-    let contents = fs::read_to_string(file_path).expect("Should have been able to read the file");
+    let contents = read_input("./src/input.txt").unwrap();
     let lines = contents.lines();
 
     let mut fully_contained_assignments = 0;
