@@ -10,14 +10,10 @@ fn main() {
     let mut moves: Vec<usize> = Vec::new();
 
     while let Some(line) = lines.next() {
-        let vec: Vec<char> = Vec::new();
-
         if idx == ROW_IDX_CRATES_STACK {
         } else if idx > ROW_IDX_CRATES_STACK {
-            // parsing move lines
-            if line == "" {
-                // println!("linea vuota")
-            } else {
+            // parsing moves
+            if line != "" {
                 for ch in line.split_whitespace() {
                     if ch != "" {
                         if let Ok(val) = ch.parse::<usize>() {
@@ -27,7 +23,7 @@ fn main() {
                 }
             }
         } else if idx < ROW_IDX_CRATES_STACK {
-            // parsing stacks stats
+            // parsing stacks
             let mut items = line.chars();
             let mut char_idx = 0;
 
@@ -45,7 +41,7 @@ fn main() {
             //     print!("[{char_idx} {item}] ");
             //     char_idx += 1;
             // }
-            println!();
+            // println!();
         }
 
         idx += 1;
@@ -59,21 +55,18 @@ fn main() {
     }
 
     assert!(moves.len() % 3 == 0, "moves array should be multiple of 3");
-    println!();
     for idx in (0..moves.len() / 3) {
         // print!("{m} ");
         let moves_count = moves[idx * 3];
         let from_stack = moves[idx * 3 + 1] - 1;
         let to_stack = moves[idx * 3 + 2] - 1;
 
-        println!("{} (from {} to {})", moves_count, from_stack, to_stack);
+        // println!("{} (from {} to {})", moves_count, from_stack, to_stack);
         for i in 0..moves_count {
             let val = reversed_lanes[from_stack].pop();
             reversed_lanes[to_stack].push(val.unwrap());
         }
-        println!("---")
     }
-    println!();
 
     for lane in reversed_lanes.clone().iter_mut() {
         print!("{}", lane.pop().unwrap());
