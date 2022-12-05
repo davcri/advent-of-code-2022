@@ -24,7 +24,7 @@ fn main() {
             }
         } else if idx < ROW_IDX_CRATES_STACK {
             // parsing stacks
-            let mut items = line.chars();
+            let items = line.chars();
             let mut char_idx = 0;
 
             for c in items {
@@ -56,15 +56,17 @@ fn main() {
 
     assert!(moves.len() % 3 == 0, "moves array should be multiple of 3");
     for idx in (0..moves.len() / 3) {
-        // print!("{m} ");
         let moves_count = moves[idx * 3];
         let from_stack = moves[idx * 3 + 1] - 1;
         let to_stack = moves[idx * 3 + 2] - 1;
 
-        // println!("{} (from {} to {})", moves_count, from_stack, to_stack);
-        for i in 0..moves_count {
+        let mut crates_group: Vec<char> = Vec::new();
+        for _ in 0..moves_count {
             let val = reversed_lanes[from_stack].pop();
-            reversed_lanes[to_stack].push(val.unwrap());
+            crates_group.push(val.unwrap());
+        }
+        for _ in 0..crates_group.len() {
+            reversed_lanes[to_stack].push(crates_group.pop().unwrap());
         }
     }
 
