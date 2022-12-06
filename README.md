@@ -8,3 +8,4 @@ I'm sharing my progress on https://mastodon.gamedev.place/@dav__cri/
 - Faster Than Lime blog posts:
   - (⚠️ SOLUTION SPOILERS, read carefully) AoC '22 https://fasterthanli.me/series/advent-of-code-2022/part-1
   - AoC '20 https://fasterthanli.me/series/advent-of-code-2020
+  - (⚠️ SOLUTION SPOILERS) https://github.com/bryanburgers/advent-of-code-2022
