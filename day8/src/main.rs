@@ -28,11 +28,14 @@ fn main() {
     let mut visible_count = 0;
     let mut highest_scenic_score = 0;
 
-    for (i, rows) in grid.clone().iter_mut().enumerate() {
+    let mut grid_clone = grid.clone();
+
+    for (i, rows) in grid_clone.iter_mut().enumerate() {
         let init_row: Vec<bool> = Vec::new();
         visiblity_grid.push(init_row);
         for (j, el) in rows.iter().enumerate() {
-            // el.visible = true;
+            let score = get_scenic_score(el, grid.clone());
+            highest_scenic_score = highest_scenic_score.max(score);
             let tree_visible = is_tree_visible(&el, grid.clone());
             visiblity_grid[i].push(tree_visible);
             if tree_visible {
@@ -41,9 +44,9 @@ fn main() {
         }
     }
 
-    // > 1414
-    println!("--- {} trees visible ---", visible_count);
-    println!("--- {} scenic score ---", highest_scenic_score);
+    println!("--- {} trees visible", visible_count);
+    println!("--- {} scenic score", highest_scenic_score);
+
     // for rows in visiblity_grid {
     //     for el in rows {
     //         if el {
@@ -78,11 +81,78 @@ fn is_tree_on_border(t: &Tree, width: usize, height: usize) -> bool {
     t.x == 0 || t.y == 0 || t.x == width - 1 || t.y == height - 1
 }
 
+#[derive(PartialEq, Eq, Hash)]
 enum Dir {
     Left,
     Right,
     Top,
     Bottom,
+}
+
+//A tree's scenic score is found by multiplying together its viewing distance in
+//each of the four directions
+fn get_scenic_score(t: &Tree, grid: Vec<Vec<Tree>>) -> i32 {
+    let mut scenic_score = 1;
+    let grid_w = grid.len();
+    let grid_h = grid[0].len();
+
+    for dir in [Dir::Left, Dir::Right, Dir::Top, Dir::Bottom] {
+        match dir {
+            Dir::Left => {
+                let mut trees = 0;
+                for i in (0..t.y).rev() {
+                    let cur_tree = &grid[t.x][i];
+                    trees += 1;
+                    if t.height > cur_tree.height {
+                        continue;
+                    } else {
+                        break;
+                    }
+                }
+                scenic_score *= trees;
+            }
+            Dir::Right => {
+                let mut trees = 0;
+                for i in t.y + 1..grid_w {
+                    let cur_tree = &grid[t.x][i];
+                    trees += 1;
+                    if t.height > cur_tree.height {
+                        continue;
+                    } else {
+                        break;
+                    }
+                }
+                scenic_score *= trees;
+            }
+            Dir::Top => {
+                let mut trees = 0;
+                for i in (0..(t.x)).rev() {
+                    let cur_tree = &grid[i][t.y];
+                    trees += 1;
+                    if t.height > cur_tree.height {
+                        continue;
+                    } else {
+                        break;
+                    }
+                }
+                scenic_score *= trees;
+            }
+            Dir::Bottom => {
+                let mut trees = 0;
+                for i in t.x + 1..grid_h {
+                    let cur_tree = &grid[i][t.y];
+                    trees += 1;
+                    if t.height > cur_tree.height {
+                        continue;
+                    } else {
+                        break;
+                    }
+                }
+                scenic_score *= trees;
+            }
+        }
+    }
+    return scenic_score;
 }
 
 // A tree is visible if all of the other trees between it and an edge of the
