@@ -81,7 +81,6 @@ fn is_tree_on_border(t: &Tree, width: usize, height: usize) -> bool {
     t.x == 0 || t.y == 0 || t.x == width - 1 || t.y == height - 1
 }
 
-#[derive(PartialEq, Eq, Hash)]
 enum Dir {
     Left,
     Right,
